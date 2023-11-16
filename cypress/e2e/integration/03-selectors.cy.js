@@ -1,82 +1,77 @@
 /// <reference types="cypress" />
 
-describe ('Cypress Selectors',() => {
+describe('Cypress Selectors', () => { 
 
-    it('Practice Web Elements using - get and contains', () => {
+    it('Practice Web Eelements using - get and contains', () => {
+
         cy.visit('https://techglobal-training.com/frontend')
-        
-        //Locate the web element by its visual text
-        cy.contains('Waits')
-        
-        //returns the first match it finds
-        cy.contains('Project')
 
+        // as() works as alias and assigns the locator to the name you defined
         cy.get('.CardGrids_CardGrids__qDdyI').as('allCards')
-        
+
         cy.get('@allCards')
 
         cy.get('.cards')
 
-        //Returns the first element from multiple web elements
+        // Returns the first element from multiple web elements
         cy.get('.cards').first()
 
-        //Returns the last element from multiple web elements
+        // Returns the last element from multiple web elements
         cy.get('.cards').last()
 
-        //Returns the web element by the index()
-
+        // Returns the web element by its index
         cy.get('.cards').eq(8)
 
-        //Locates the web element by its VISUAL text on the UI
+        // Locates the web element by its VISUAL text on the UI
         cy.contains('Html Elements')
 
-        //All the commands below return the same result but they get more specific
+        // This one tries to find element with "Html Elements" visual text inside the web elements with .class attribute 
         cy.contains('.cards','Html Elements')
-        
+
+        // This will do the same thing as above locator in more explicit way
+        // It will look for card with 'Html elements' visible text ONLY inside the class name '.CardGrids_CardGrids__qDdyI'.
         cy.get('@allCards').contains('Html Elements')
 
-        cy.get('#card-1').contains('Html Elements')
+    })
 
-    }),
-
-    it('Practice Web Elements using - find', () => {
+    it('Practice Web Eelements using - find()', () => {
 
         cy.visit('https://techglobal-training.com/frontend')
 
         cy.contains('.cards','Html Elements').click()
-
-        // When we do this, we try to locate web element with 'Paragrpahs' text web container
-        cy.get('div').contains('Paragraphs')
         
-        cy.get('#radio-button-group div')
+        // When we do this, we try to locate web element with "Paragraphs" text inside the div container
+        cy.get('div').contains('Paragraphs')
 
-        //find gets us the web element unlike contains which check the text element
         cy.get('#radio-button-group').find('div')
 
-    }),
 
-    it('Practice Web Elements using - next(),prev(),nextAll(), prevAll()', () => {
+        cy.get('#radio-button-group div')
+
+    })
+
+    it.only('Practice Web Eelements using - next(), prev(), nextAll(), prevAll()', () => {
 
         cy.visit('https://techglobal-training.com/frontend')
 
         cy.contains('.cards','Html Elements').click()
         
-        //When we click on Html Elements card and then use next() function, it will take us to the next sibling of that element
-        
-        cy.get('div').contains('Paragraphs').next()
+        // next()  => locates the immediate next sibling of a web element
+        cy.get('div').contains('Paragraphs').next().next()
 
-        // NextAll () => this will locate all next immediate sibilings
-
+        // nextAll()  => this will locate ALL next immediate siblings
         cy.get('div').contains('Paragraphs').nextAll()
 
-        //prev() => locates the immediate previous sibiling
 
+        // prev()  => locates the immediate previous sibling of a web element
         cy.get('#testing_paragraph').prev()
 
-        //prevAll() => this will locate all the previous immediate sibilings
-
+        // prevAll()  => this will locate ALL previous immediate siblings
         cy.get('#testing_paragraph').prevAll()
 
-        
+
+        cy.get('#checkbox-button-group').next().find('div').first().find('input').parent().parent().parent().prev()
+
+
     })
-})
+ })

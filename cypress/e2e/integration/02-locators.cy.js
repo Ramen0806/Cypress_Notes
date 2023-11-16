@@ -1,58 +1,58 @@
-
 describe('CSS Locators', () => {
 
-    it('Understanding CSS Syntax', () => {
+    beforeEach(() => {
+        cy.visit("https://techglobal-training.com/frontend/html-elements");
+  
+    })
 
-        cy.visit('https://techglobal-training.com/frontend/html-elements')
-        
-        cy.get('#register_button')
+    it('Understanding CSS Syntax - Locating using Tags', () => {
+
+
+        cy.get('button')
 
         cy.get('h3')
 
         cy.get('li')
 
         cy.get('input')
-
     })
 
-    it('Understanding CSS Syntax -Locating using id and class', () => {
 
-        cy.visit('https://techglobal-training.com/frontend/html-elements')
-        
+    it('Understanding CSS Syntax - Locating using class and id', () => {
+
+
         cy.get('#hello_paragraph')
-
         cy.get('#testing_paragraph')
 
         cy.get('#microsoft_check')
     })
 
+    it('Understanding CSS Syntax - Locating web elements with its multiple attributes', () => {
 
-    it('Understanding CSS Syntax -Locating Web elements with multiple arrtibutes  ', () => {
-
-        cy.visit('https://techglobal-training.com/frontend/html-elements')
 
         cy.get('button.is-inline')
         cy.get('label.is-inline')
-        cy.get('div#checkbox-button-group')
 
- 
-        
+        cy.get('div#checkbox-button-group')
     })
 
 
-    it('Understanding CSS Syntax -Locating child, descendant, adjacent web elements ', () => {
+    it('Understanding CSS Syntax - Locating child, descendant, adjacent web elements', () => {
 
-        cy.visit('https://techglobal-training.com/frontend/html-elements')
- 
-        cy.get('div >#hello_paragraph')
-        
-        cy.get('div >#testing_paragraph')
+
+        /**
+         * Child Selector (>) *
+         * Description: Targets direct children of a specified parent element.
+         */
+
+        cy.get('div > #hello_paragraph')
+        cy.get('div > #testing_paragraph')
 
         cy.get('.is-flex > h3')
 
         cy.get('#radio-button-group > h3')
 
-        cy.get('#radio-button-group > div> #java_radio > #radio_1_option_1')
+        cy.get('#radio-button-group > div > label > #radio_1_option_1')
 
 
         /**
@@ -60,89 +60,88 @@ describe('CSS Locators', () => {
          * Description: Targets elements nested anywhere within a specific parent.
          */
 
+        cy.get('#checkbox-button-group #microsoft_check')
 
-        cy.get('div  #radio_1_option_1')
+        cy.get('#root #ordered_list_item1')
+
         
-        cy.get('div  #ordered_list_item1')
 
-        //locates immediate sibiling of h3
+        // Locates immediate sibling of h3
         cy.get('#checkbox-button-group > h3 ~ div')
 
-        //locates all immediate siblings of h3
+        // Locates all immediate siblings of h3
         cy.get('#checkbox-button-group > h3 + div')
 
-        cy.get('#checkbox-button-group > h3 ~ *')
-
-        //locates group elements
-
-        cy.get('div > h3 +')
-
-        cy.get('button , a')
-
-        cy.get('button , input')
-
-        cy.get('li , p , button')
-
-        cy.get('#apple_check, #java_radio ')
-
-        cy.get('#checkbox-button-group > div > #checkbox_1, label')
 
 
-    }),
+        cy.get('button, input')
+        cy.get('li, p')
 
-    it('Understanding CSS Syntax -attributes locaters ', () => {
+        cy.get('#apple_check, #java_radio')
 
-        cy.visit('https://techglobal-training.com/frontend/html-elements')
- 
+        cy.get('#checkbox-button-group > div #checkbox_1, label')
+    })
+
+    it('Understanding CSS Syntax - Attribute locators', () => {
+
+
         cy.get('[class="radio"] > input')
 
+        cy.get('[class="radio"] input')
 
-})
 
+    })
 
-it('Understanding CSS Syntax - dynamic attributes  ', () => {
-
-    cy.visit('https://techglobal-training.com/frontend/html-elements')
-
-    /**
-     *  => * (contains)
-     *  => ^ (starts with)
-     *  => $ (ends with)
+     /**
+     * TEST CASE 1
+     * Go to https://techglobal-training.com/frontend/dynamic-elements
+     * Locate the below box is displayed
+     * Box 1
+     * 
+     * TEST CASE 2
+     * Go to https://techglobal-training.com/frontend/dynamic-elements
+     * Locate the below box is displayed
+     * Box 2
      */
-    cy.get('[class ^= rad]')
 
-})
+    it('Dynamic elements test case', () => {
 
-it('Understanding CSS Syntax - dynamic attributes  ', () => {
 
-    cy.visit('https://techglobal-training.com/frontend/dynamic-elements')
+        /**]
+         * => [class*="className"] (contains)
+         * => ^ (starts-with)
+         * => $ (ends-with)
+         */
 
-    /**
-     *  => * (contains)
-     *  => ^ (starts with)
-     *  => $ (ends with)
-     */
-    cy.get('[id ^= box_1]').should('be.visible')
-    cy.get('[id ^= box_2]').should('be.visible')
+        cy.visit('https://techglobal-training.com/frontend/dynamic-elements')
 
-})
+        cy.get('[id^="box_1_"]').should('be.visible')
+        cy.get('[id^="box_2_"]').should('be.visible')
+        
+    })
 
-it('Understanding CSS Syntax - pseudo classes ', () => {
 
-    cy.visit('https://techglobal-training.com/frontend/html-elements')
 
-    cy.get('#ordered_list')
+    it.skip('CSS Locators - Pseudo-classes', () => {
 
-    cy.get('#ordered_list li:last-child')
 
-    cy.get('#ordered_list li:first-child')
 
-    cy.get('#ordered_list li:nth-child(1) ')
+        cy.get('#ordered_list li')
 
-    cy.get('option:selected ')
+        cy.get('#ordered_list li:last-child')
+        cy.get('#ordered_list li:first-child')
+        cy.get('#ordered_list li:nth-child(1)')
+
+
+        cy.get('#checkbox_1').check()
+
+        cy.get('input:checked')
+
+        cy.get('option:selected')
 
         //NOTE: You can practice below locator using below URL
         // cy.visit('https://techglobal-training.com/js-exercises/js-output')
         // cy.get('.explanation.content > p + ul > li:first-child')
-})
+        
+    })
 })

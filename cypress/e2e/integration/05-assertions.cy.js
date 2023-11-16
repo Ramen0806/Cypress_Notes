@@ -4,7 +4,7 @@ describe('Cypress Assertions', () => {
 
         // This will fail if the page doesn't send text/html with a 200 status
         cy.visit('https://techglobal-training.com/frontend')
-        cy.get('.cards').contains('Html Elements').click()
+        cy.clickCard('Html Elements')
 
         cy
         // there is a default assertion that this
@@ -18,14 +18,13 @@ describe('Cypress Assertions', () => {
         // it connat be covered, ordisabled,  hidden from the view.
         .click()
 
-        // This will fail if the element s not typable.
+        // This will fail if the element os not typable.
         cy.get('#text_input1').type('TechGlobal')
     })
 
     it('Implicit Assertions', () => {
 
         cy.visit('https://techglobal-training.com/frontend')
-        cy.get('.cards').contains('Html Elements').click()
 
         // Any assertion we do using .should() method, is an "Implicit Assertion"
 
@@ -94,7 +93,7 @@ describe('Cypress Assertions', () => {
     it('Explicit Assertions', () => {
 
         cy.visit('https://techglobal-training.com/frontend')
-        cy.get('.cards').contains('Html Elements').click()
+        cy.clickCard('Html Elements')
 
         // Any assertion we do using .should() method, is an "Implicit Assertion"
 
@@ -153,9 +152,8 @@ describe('Cypress Assertions', () => {
             cy.wrap($el).should('have.text', 'Html Elements')
             cy.wrap($el.text()).should('eq', 'Html Elements')
         })
-
 })
-    
+
     it('More explicit assertions - Validate Multiple elements', () => {
 
         cy.visit('https://techglobal-training.com/frontend')
@@ -188,35 +186,41 @@ describe('Cypress Assertions', () => {
             expect($el).to.be.visible
         })
 
-        //Utilizing the wrap approach for multiple assertions
-        cy.get('@paragraphHeader').each(($el,index) => {
-            // To enable further chaining with Cypress commands, re-wrap th element using cy.wrap()
-            // This allows for the continiuous of implicit assertions
+        // Utilizing the wrap approach for multiple assertions
+        cy.get('@paragraphHeader').each(($el, index) => {
+            // To enable further chaining with Cypress commands, re-wrap the element using cy.wrap()
+            // This allows for the continuious of implicit assertions
             cy.wrap($el).should('have.text', arr[index]).and('be.visible')
 
-            //However, it is important to note that if the text is directly retrived from the element as a string
-            // the nature of the context changes from element to a plain string
+            // Howeever, it is important to note that if he ext is directly retrieved from the element as a string
+            // the nature of the content changes from web element to plain STRING
             // In essence, assertions should adapt to use 'eq' instead of 'have.text'
-            // Additionally, since tje content with web element-specific commands such as 'be.visible' is not gonna work
-            //cy.wrap($el.text()).should('have.text', arr[index]).and('be.visible')
+            // Additionally, since the content is no longer a web element
+            // furhter chaining with web element-specific commands, such as 'be.visible.' is not gonna work.
+            cy.wrap($el.text()).should('eq', arr[index])
         })
 
+
+
         /**
-         * 1. On the Html Elements page 
-         * 2. From the 'Headings' section locate both 'Programming Languages' and 'Automation Tools' web elements
+         * 1. On the Html Elements page
+         * 2. From the "Headings" section, locate both "Programming Languages" and "Automation Tools" web elements
          * 3. Validate their texts with expected text
          * 4. Validate these elements are visible.
          */
 
+        cy.contains('Headings').nextAll().as('headingElements')
 
-        //cy.get(':nth-child(2) > h3').nextAll().as('headings')
-        cy.contains('Headings').nextAll().as('headings')
+        const headingTexts = ['Programming Languages', 'Automation Tools']
 
-        const arr1 = ['Programming Languages','Automation Tools']
-
-        cy.get('@headings').each(($el,index) => {
-            cy.wrap($el).should('have.text', arr1[index]).and('be.visible')
+        cy.get('@headingElements').each(($el, index) => {
+            expect($el.text()).to.equal(headingTexts[index])
+            expect($el).to.be.visible
+            cy.log($el)
+            cy.log($el.text())
+            cy.wrap($el).should('have.text', headingTexts[index]).and('be.visible')
         })
+
 
         /**
          * 1. On the Html Elements page
@@ -225,72 +229,75 @@ describe('Cypress Assertions', () => {
          * 4. Validate checkboxes are visible, and enabled
          */
 
-        const arr2 = ['Apple','Microsoft','Tesla']
-
+        cy.contains("Checkboxes").nextAll().as("Checkboxes")
+        
+        const boxes = ["Apple", "Microsoft", "Tesla"]
+        
         cy.get('#checkbox-button-group > div').each(($el, index) => {
-            cy.wrap($el).find('label').should('have.text',arr2[index])
+            cy.wrap($el).find('label').should('have.text', boxes[index])
             cy.wrap($el).find('input').should('be.visible').and('be.enabled')
         })
-
-})
-
-it.only('Practice assertions',()=>{
-   /* * 1. Go to https://techglobal-training.com/frontend
-     * 2. Navigate to 'Html Elements' card
-     * 3. From the "Text Inputs" section
-     * 4. Validate text input 1 and text input 2 is enabled
-     * 5. Validate text input 1 and text input 2 is is not required
-     * 6. Enter your name and last name
-     */
-   cy.visit('https://techglobal-training.com/frontend')
-   cy.clickCard('Html Elements')
-
-    cy.contains('Text Inputs').parent().find('input').as('textInputs')
-    const names = ['Ramez','Karim']
-     cy.get('@textInputs').each(($el, index)=> {
-        cy.wrap($el).type(names[index]).should('be.enabled').and('not.have.attr','required')
     })
-    /**
-     * 1. Go to https://techglobal-training.com/frontend
-     * 2. Navigate to 'Html Elements' card
-     * 3. From the "Date Inputs" section
-     * 4. Validate date input 1 and date input 2 is enabled
-     * 5. Validate date input 1 and date input 2 is is not required
-     * 6. Enter dates for both date input 1 and date input 2
-     * 7. Validate value is changed to given dates.
-     */
-        
-    cy.contains('Date Inputs').parent().find('input').as('dateInputs')
 
-  
-    const dates = ['10/31/2023','11/01/2023']
+    it.only('Assertion Practices', () => {
 
-        cy.get('@dateInputs').each(($el, index) => {    
-        cy.wrap($el).clear().type(`${dates[index]}{enter}`).should('have.value', dates[index]).and('be.enabled').and('not.have.attr', 'required') 
-          })
-   
+        cy.visit('https://techglobal-training.com/frontend')
+        cy.clickCard('Html Elements')
+
         /**
-     * 1. Go to https://techglobal-training.com/frontend
-     * 2. Navigate to 'Html Elements' card
-     * 3. From the "Dropdowns" section
-     * 4. Validate dropdown 1 and dropdown 2 is enabled
-     * 6. Enter Microsoft for dropdown 1 and Apple for dropdown 2
-     * 7. Validate options are selected
-     */
+         * 1. Go to https://techglobal-training.com/frontend
+         * 2. Navigate to 'Html Elements' card
+         * 3. From the "Text Inputs" section
+         * 4. Validate text input 1 and text input 2 is enabled
+         * 5. Validate text input 1 and text input 2 is is not required
+         * 6. Enter your name and last name
+         */
 
-  
+        cy.contains('Text Inputs').parent().find('input').as('textInputs')
 
-        const values = ['Microsoft','Apple']
-        cy.get('#company_dropdown1,#company_dropdown2').each(($el,index) => {
+        const names = ['Tech', 'Global']
+
+        cy.get('@textInputs').each(($el, index) => {
+            cy.wrap($el).type(names[index]).should('be.enabled').and('not.have.attr', 'required')
+        })
+
+        /**
+         * 1. Go to https://techglobal-training.com/frontend
+         * 2. Navigate to 'Html Elements' card
+         * 3. From the "Date Inputs" section
+         * 4. Validate date input 1 and date input 2 is enabled
+         * 5. Validate date input 1 and date input 2 is is not required
+         * 6. Enter dates for both date input 1 and date input 2
+         * 7. Validate value is changed to given dates.
+         */
+
+
+        cy.contains('Date Inputs').parent().find('input').as('dateInputs')
+
+
+        const dates = ['11/11/2000', '11/11/2000']
+
+        cy.get('@dateInputs').each(($el, index) => {
+            cy.wrap($el).clear().type(`${dates[index]}{enter}`)
+            .should('have.attr', 'value', dates[index])
+            .and('be.enabled')
+            .and('not.have.attr', 'required')
+        })
         
-        cy.wrap($el).select(values[index]).should('have.value', values[index]).and('be.enabled')
+        /**
+         * 1. Go to https://techglobal-training.com/frontend
+         * 2. Navigate to 'Html Elements' card
+         * 3. From the "Dropdowns" section
+         * 4. Validate dropdown 1 and dropdown 2 is enabled
+         * 6. Enter Microsoft for dropdown 1 and Apple for dropdown 2
+         * 7. Validate options are selected
+         */
 
-    }) 
-     
+        const options = ['Microsoft', 'Apple']
 
-})
+        cy.get('#company_dropdown1,#company_dropdown1').each(($el, index) => {
+            cy.wrap($el).should('be.enabled').select(options[index]).find('option:selected').should('have.text', options[index])
+        })
 
-
-
-
+    })
 })
